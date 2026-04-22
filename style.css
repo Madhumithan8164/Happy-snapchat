@@ -689,6 +689,22 @@ button {
     top: 0 !important; left: 0 !important;
 }
 
+/* Suppress MindAR's built-in UI elements leaking through */
+.mindar-ui-overlay,
+.mindar-ui-scanning,
+.mindar-ui-loading,
+[class*="mindar-ui"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* Also hide any stray canvas/video elements MindAR injects at body level */
+body > canvas:not(#cursor-trail),
+body > video:not(#fallback-video):not(#video1):not(#video2) {
+    display: none !important;
+}
+
 #ar-container {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: transparent; z-index: 3001;
