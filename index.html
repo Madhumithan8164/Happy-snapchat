@@ -173,8 +173,8 @@
     <div id="ar-scene-wrapper">
         <a-scene id="ar-scene" embedded mindar-image="imageTargetSrc: ./AR/targets%201.mind; autoStart: false; uiScanning: no; uiLoading: no;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
             <a-assets>
-                <video id="video1" src="./AR/video/Video%201.mp4" playsinline webkit-playsinline crossorigin="anonymous"></video>
-                <video id="video2" src="./AR/video/Video%202.mp4" playsinline webkit-playsinline crossorigin="anonymous"></video>
+                <video id="video1" src="./AR/video/Video%201.mp4" playsinline webkit-playsinline muted preload="auto" crossorigin="anonymous"></video>
+                <video id="video2" src="./AR/video/Video%202.mp4" playsinline webkit-playsinline muted preload="auto" crossorigin="anonymous"></video>
                 <img id="finalImg1" src="./AR/final%20image/final%201.jpeg" crossorigin="anonymous">
                 <img id="finalImg2" src="./AR/final%20image/final%202.jpeg" crossorigin="anonymous">
             </a-assets>

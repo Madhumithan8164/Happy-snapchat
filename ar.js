@@ -48,6 +48,19 @@ function startAR() {
     if (scanningIndicator) scanningIndicator.classList.remove('hidden');
     if (viewfinder) viewfinder.classList.remove('hidden');
 
+    // CRITICAL: Unlock all videos during this user-gesture click
+    // Mobile browsers block video.play() unless triggered by a user interaction.
+    // We trigger play+pause here so the browser "unlocks" each video element.
+    targets.forEach(t => {
+        if (t.videoEl) {
+            t.videoEl.muted = true;
+            t.videoEl.play().then(() => {
+                t.videoEl.pause();
+                t.videoEl.currentTime = 0;
+            }).catch(() => {});
+        }
+    });
+
     try {
         const mindARSystem = sceneEl.systems['mindar-image-system'];
         if (mindARSystem) {
@@ -128,7 +141,13 @@ targets.forEach(t => {
             if (t.arImageEl) t.arImageEl.setAttribute('visible', 'false');
 
             t.videoEl.currentTime = 0;
-            t.videoEl.play().catch(e => console.warn('Video play failed:', e));
+            t.videoEl.muted = false; // unmute now that we're playing for real
+            t.videoEl.play().catch(e => {
+                // If unmuted play fails, try muted as fallback
+                console.warn('Unmuted play failed, trying muted:', e);
+                t.videoEl.muted = true;
+                t.videoEl.play().catch(e2 => console.error('Video play failed:', e2));
+            });
         });
 
         t.targetEl.addEventListener('targetLost', () => {
