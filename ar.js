@@ -41,6 +41,12 @@ sceneEl.addEventListener('loaded', () => {
         pendingStart = false;
         startAR();
     }
+
+    // Auto-open if navigated from the bottom nav camera button
+    if (sessionStorage.getItem('openAR') === '1') {
+        sessionStorage.removeItem('openAR');
+        startAR();
+    }
 });
 
 // --- AR Start / Stop ---
