@@ -9,72 +9,70 @@ const scanningIndicator = document.querySelector('.scanning-indicator');
 const viewfinder = document.querySelector('.viewfinder');
 const sceneEl = document.getElementById('ar-scene');
 
-// Wait for DOM to be fully ready before grabbing targets
-let targets = [];
+// Video & Image Reveal Modals
+const videoModal = document.getElementById('video-modal');
+const revealVideo = document.getElementById('ar-reveal-video');
+const closeVideoModalBtn = document.getElementById('close-video-modal-btn');
+const imageModal = document.getElementById('image-modal');
+const revealImage = document.getElementById('ar-reveal-image');
+const closeImageModalBtn = document.getElementById('close-image-modal-btn');
 
-sceneEl.addEventListener('loaded', () => {
-    targets = [
-        {
-            targetEl: document.getElementById('target1'),
-            videoEl: document.getElementById('video1'),
-            arImageEl: document.getElementById('ar-image1')
-        },
-        {
-            targetEl: document.getElementById('target2'),
-            videoEl: document.getElementById('video2'),
-            arImageEl: document.getElementById('ar-image2')
-        }
-    ];
-
-    setupTargetListeners();
-    console.log('AR Scene loaded. Targets ready.');
-});
+// Video/image sources per target
+const targetData = [
+    { videoSrc: './AR/video/Video%201.mp4', imageSrc: './AR/final%20image/final%201.jpeg' },
+    { videoSrc: './AR/video/Video%202.mp4', imageSrc: './AR/final%20image/final%202.jpeg' }
+];
 
 let arSceneReady = false;
 let pendingStart = false;
+let targets = [];
 
+// Wait for A-Frame scene to load before grabbing entities
 sceneEl.addEventListener('loaded', () => {
     arSceneReady = true;
+    targets = [
+        { targetEl: document.getElementById('target1'), dataIndex: 0 },
+        { targetEl: document.getElementById('target2'), dataIndex: 1 }
+    ];
+    setupTargetListeners();
+    console.log('AR Scene ready.');
+
     if (pendingStart) {
         pendingStart = false;
         startAR();
     }
 });
 
+// --- AR Start / Stop ---
+
 function startAR() {
     arSceneWrapper.classList.add('active');
     arContainer.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
-
     if (scanningIndicator) {
         scanningIndicator.classList.remove('hidden');
         scanningIndicator.textContent = '🎯 Point at the Photo...';
     }
     if (viewfinder) viewfinder.classList.remove('hidden');
 
-    // Unlock all videos during this user-gesture click event
-    // This is required by mobile browsers before they allow .play()
-    const v1 = document.getElementById('video1');
-    const v2 = document.getElementById('video2');
-    [v1, v2].forEach(v => {
-        if (v) {
-            v.muted = true;
-            v.play().then(() => { v.pause(); v.currentTime = 0; }).catch(() => {});
-        }
-    });
-
     try {
         const sys = sceneEl.systems['mindar-image-system'] || sceneEl.systems.mindarimage;
-        if (sys) {
-            sys.start();
-        } else {
-            console.warn('MindAR not ready');
-            showFallback();
-        }
+        if (sys) sys.start();
+        else showFallback();
     } catch (err) {
-        console.error('startAR error:', err);
+        console.error('MindAR start error:', err);
         showFallback();
     }
+}
+
+function stopAR() {
+    try {
+        const sys = sceneEl.systems['mindar-image-system'] || sceneEl.systems.mindarimage;
+        if (sys) sys.stop();
+    } catch (e) {}
+    arContainer.classList.add('hidden');
+    arSceneWrapper.classList.remove('active');
+    document.body.style.overflow = 'auto';
 }
 
 function showFallback() {
@@ -83,6 +81,8 @@ function showFallback() {
     fallbackContainer.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
 }
+
+// --- Button Listeners ---
 
 startArBtn.addEventListener('click', () => {
     if (arSceneReady) {
@@ -97,27 +97,7 @@ startArBtn.addEventListener('click', () => {
 });
 
 closeArBtn.addEventListener('click', () => {
-    arContainer.classList.add('hidden');
-    arSceneWrapper.classList.remove('active');
-    document.body.style.overflow = 'auto';
-
-    try {
-        const sys = sceneEl.systems['mindar-image-system'] || sceneEl.systems.mindarimage;
-        if (sys) sys.stop();
-    } catch (e) {}
-
-    const v1 = document.getElementById('video1');
-    const v2 = document.getElementById('video2');
-    [v1, v2].forEach(v => { if (v) { v.pause(); v.currentTime = 0; } });
-
-    if (scanningIndicator) scanningIndicator.classList.remove('hidden');
-    if (viewfinder) viewfinder.classList.remove('hidden');
-
-    // Reset images
-    ['ar-image1', 'ar-image2'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.setAttribute('visible', 'false');
-    });
+    stopAR();
 });
 
 closeFallbackBtn.addEventListener('click', () => {
@@ -126,41 +106,71 @@ closeFallbackBtn.addEventListener('click', () => {
     if (fallbackVideo) fallbackVideo.pause();
 });
 
+// --- Video Modal ---
+function showVideoModal(dataIndex) {
+    const data = targetData[dataIndex];
+    revealVideo.src = data.videoSrc;
+    revealVideo.currentTime = 0;
+    videoModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    revealVideo.play().catch(e => {
+        console.warn('Video play failed:', e);
+        // Force muted play as fallback
+        revealVideo.muted = true;
+        revealVideo.play();
+    });
+}
+
+closeVideoModalBtn.addEventListener('click', () => {
+    videoModal.classList.add('hidden');
+    revealVideo.pause();
+    revealVideo.src = '';
+    document.body.style.overflow = 'auto';
+});
+
+revealVideo.addEventListener('ended', () => {
+    videoModal.classList.add('hidden');
+    revealVideo.pause();
+    // Show final image
+    const currentSrc = revealVideo.getAttribute('data-image-src');
+    if (currentSrc) {
+        revealImage.src = currentSrc;
+        imageModal.classList.remove('hidden');
+    }
+});
+
+// --- Image Modal ---
+closeImageModalBtn.addEventListener('click', () => {
+    imageModal.classList.add('hidden');
+    revealImage.src = '';
+    document.body.style.overflow = 'auto';
+});
+
+// --- MindAR Target Events ---
 function setupTargetListeners() {
     targets.forEach(t => {
-        if (!t.targetEl || !t.videoEl) return;
+        if (!t.targetEl) return;
 
         t.targetEl.addEventListener('targetFound', () => {
-            console.log('Target found:', t.targetEl.id);
+            console.log('Target found:', t.targetEl.id, '→ index', t.dataIndex);
+
+            // Hide scanning UI
             if (scanningIndicator) scanningIndicator.classList.add('hidden');
             if (viewfinder) viewfinder.classList.add('hidden');
 
-            // Reset image, show video
-            if (t.arImageEl) t.arImageEl.setAttribute('visible', 'false');
+            // Stop AR camera and show video modal
+            stopAR();
 
-            // Play with sound, fall back to muted if blocked
-            t.videoEl.currentTime = 0;
-            t.videoEl.muted = false;
-            const playPromise = t.videoEl.play();
-            if (playPromise !== undefined) {
-                playPromise.catch(() => {
-                    console.warn('Sound blocked, trying muted...');
-                    t.videoEl.muted = true;
-                    t.videoEl.play().catch(e => console.error('Video play failed completely:', e));
-                });
-            }
+            // Store which image to show after video
+            const data = targetData[t.dataIndex];
+            revealVideo.setAttribute('data-image-src', data.imageSrc);
+
+            showVideoModal(t.dataIndex);
         });
 
         t.targetEl.addEventListener('targetLost', () => {
-            console.log('Target lost:', t.targetEl.id);
             if (scanningIndicator) scanningIndicator.classList.remove('hidden');
             if (viewfinder) viewfinder.classList.remove('hidden');
-            t.videoEl.pause();
-        });
-
-        t.videoEl.addEventListener('ended', () => {
-            console.log('Video ended:', t.targetEl.id);
-            if (t.arImageEl) t.arImageEl.setAttribute('visible', 'true');
         });
     });
 }

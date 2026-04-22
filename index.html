@@ -206,8 +206,23 @@
             <div class="scanning-indicator">🎯 Point at the Photo...</div>
         </div>
     </div>
+    <!-- Full-screen Video Modal (triggered on target detection) -->
+    <div id="video-modal" class="hidden">
+        <div class="video-modal-inner">
+            <button id="close-video-modal-btn" class="close-btn video-modal-close">✕</button>
+            <video id="ar-reveal-video" playsinline webkit-playsinline class="reveal-video"></video>
+        </div>
+    </div>
 
-    <!-- Fallback Video (Hidden initially) -->
+    <!-- Final Image Modal (shown after video ends) -->
+    <div id="image-modal" class="hidden">
+        <div class="image-modal-inner">
+            <button id="close-image-modal-btn" class="close-btn image-modal-close">✕</button>
+            <img id="ar-reveal-image" src="" alt="Surprise!" class="reveal-image">
+        </div>
+    </div>
+
+    <!-- Fallback (camera not available) -->
     <div id="fallback-container" class="hidden">
         <video id="fallback-video" src="./AR/video/Video%201.mp4" controls playsinline></video>
         <button id="close-fallback-btn" class="snap-pill-btn mt-4">Close Video</button>
