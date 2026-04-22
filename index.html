@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Happy Birthday!</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="./style.css">
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    
+    <!-- MindAR & A-Frame (for AR) -->
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+    <!-- Cloudinary SDK -->
+    <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
+</head>
+<body>
+
+    <!-- Background Confetti -->
+    <div class="confetti-bg-container">
+        <!-- 20 confetti pieces -->
+        <div class="confetti-piece" style="left: 5%; animation-delay: 0s; animation-duration: 15s;"></div>
+        <div class="confetti-piece" style="left: 15%; animation-delay: 2s; animation-duration: 18s;"></div>
+        <div class="confetti-piece" style="left: 25%; animation-delay: 5s; animation-duration: 14s;"></div>
+        <div class="confetti-piece" style="left: 35%; animation-delay: 1s; animation-duration: 20s;"></div>
+        <div class="confetti-piece" style="left: 45%; animation-delay: 8s; animation-duration: 16s;"></div>
+        <div class="confetti-piece" style="left: 55%; animation-delay: 3s; animation-duration: 19s;"></div>
+        <div class="confetti-piece" style="left: 65%; animation-delay: 6s; animation-duration: 17s;"></div>
+        <div class="confetti-piece" style="left: 75%; animation-delay: 0s; animation-duration: 15s;"></div>
+        <div class="confetti-piece" style="left: 85%; animation-delay: 4s; animation-duration: 22s;"></div>
+        <div class="confetti-piece" style="left: 95%; animation-delay: 7s; animation-duration: 14s;"></div>
+    </div>    <!-- Global Page Transition Overlay -->
+    <div class="page-transition"></div>
+
+    <!-- Background Music -->
+    <audio id="bg-music" loop>
+        <source src="./assets/audio/birthday.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Cursor Trail Canvas -->
+    <canvas id="cursor-trail"></canvas>
+
+    <!-- Feature 2: Friendship Streak Counter (Sticky) -->
+    <div id="streak-counter" class="streak-bar hidden">
+        <div class="streak-content">
+            <span class="fire-emoji">🔥</span>
+            <span id="streak-number">0</span>
+            <span class="streak-label">days of BFF!!</span>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <main id="smooth-wrapper">
+        <div id="smooth-content">
+
+            <!-- Feature 1: Hero / Landing -->
+            <section id="hero" class="panel">
+                <div class="hero-content">
+                    <!-- Ghost SVG -->
+                    <div class="ghost-logo-container">
+                        <img id="hero-bitmoji" src="./bitmoji/Snapchat-908449829-jukebox-bg-removed.png" class="snap-ghost" alt="Bitmoji" style="width: 200px; height: 200px; object-fit: contain;">
+                    </div>
+                    
+                    <h1 id="hero-title" class="animated-text">Happy Birthday<br>Macha!!</h1>
+                    <p id="hero-subtitle" class="typewriter-text"></p>
+                    
+                    <div class="hero-actions" style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                        <button id="enter-btn" class="snap-pill-btn">Open Snap ▶</button>
+                        <a href="spotlight.html" class="nav-spotlight-btn"><span>✨</span> Spotlight</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Memory Cloud Gallery -->
+            <section id="gallery" class="panel">
+                <h2 class="section-title slide-in" style="z-index: 50;">Us, always 📸</h2>
+                <div class="cloud-container" id="photo-cloud">
+                    <!-- Photos injected by JS -->
+                </div>
+                <div style="z-index: 50; display: flex; gap: 1rem;" class="mt-4">
+                    <a href="gallery.html" class="snap-pill-btn" style="text-decoration: none;">Gallery 🎨</a>
+                </div>
+            </section>
+
+            <!-- Feature 5: Fake Snapchat Chat UI -->
+            <section id="chat-ui" class="panel">
+                <!-- Decorative Bitmojis -->
+                <img src="./bitmoji/WhatsApp%20Image%202026-043.32.38.png" class="chat-deco left-deco" alt="Deco">
+                <img src="./bitmoji/WhatsApp%20Image%202026-04-21%20at%2023.32.38.png" class="chat-deco right-deco" alt="Deco">
+
+                <div class="phone-frame">
+                    <div class="chat-header">
+                        <div class="avatar-circle"><img src="./bitmoji/WhatsApp%20Image%202026-04-21%20at%2023.06.56.jpeg" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;"></div>
+                        <div class="chat-info">
+                            <span class="chat-name">Harshitha S</span>
+                            <span class="chat-status"><span class="green-dot"></span>Active now</span>
+                            <span class="chat-streak-mini" style="font-size: 0.75rem; font-weight: bold; color: #ff7b00; margin-top: 2px;">🔥 <span id="chat-streak-number">0</span></span>
+                        </div>
+                        <div style="margin-left: auto; font-size: 1.5rem;">💕</div>
+                    </div>
+                    <div class="chat-body" id="chat-messages">
+                        <div class="timestamp">Yesterday 11:59 PM</div>
+                        <div class="message their-msg">hmm...</div>
+                        <div class="timestamp">Today 12:00 AM</div>
+                        <div class="message my-msg">Happy Birthday, Macha!! 🥳</div>
+                        <div class="message my-msg">I can't believe another year has flown by.</div>
+                        <div class="message my-msg">You are the best thing that happened in my life</div>
+                        <div class="message my-msg">I'm so lucky to have you as my bestf, and always proud of it</div>
+                        <div class="message my-msg">A lots of thanks you!!</div>
+                        <div class="message my-msg">A lots of sorry!!</div>
+                        <div class="message my-msg">To all the memories and movements we have and we will chrees to that</div>
+                        <div class="message my-msg">ur stuck as my bestf forever</div>
+                        <div class="message my-msg">Love You Forever!! 💛</div>
+                    </div>
+                    <div class="read-receipt hidden">Opened 💛 just now</div>
+                    <div class="chat-footer">
+                        <input type="text" id="chat-secret-input" class="chat-input" placeholder="Send a chat..." autocomplete="off">
+                    </div>
+                </div>
+            </section>
+
+            <!-- AR Frame Scanner (From original requirements) -->
+            <section id="ar-scanner" class="panel">
+                <!-- Decorative Bitmojis -->
+                <img src="./bitmoji/WhatsApp%20Image%202026-04-21%20at%2023.32.37.png" class="chat-deco left-deco" alt="Deco">
+                <img src="./bitmoji/Snapchat-937848846-jukebox-bg-removed.png" class="chat-deco right-deco" alt="Deco">
+                
+                <h2 class="section-title">Scan the Frame</h2>
+                <div class="ar-ui">
+                    <button id="start-ar-btn" class="snap-pill-btn">Scan Me 📷</button>
+                    <p class="ar-instruction">Point your camera at the birthday frame!</p>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Feature 4: Stories-Style Photo Viewer Overlay -->
+    <div id="stories-overlay" class="hidden">
+        <div class="stories-progress-container">
+            <!-- Progress bars injected via JS -->
+        </div>
+        <div class="stories-header">
+            <div class="stories-user">
+                <div class="avatar-circle small"><img src="./bitmoji/WhatsApp%20Image%202026-04-21%20at%2023.06.56.jpeg" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;"></div>
+                <span class="stories-name">Harshitha S</span>
+            </div>
+            <button id="close-stories-btn" class="close-btn">✕</button>
+        </div>
+        <div class="stories-content">
+            <img id="story-image" src="" alt="Story">
+            <div class="story-caption" id="story-caption"></div>
+        </div>
+        <div class="stories-nav">
+            <div class="nav-left" id="story-prev"></div>
+            <div class="nav-right" id="story-next"></div>
+        </div>
+    </div>
+
+    <!-- AR Container (Hidden initially) -->
+    <div id="ar-container" class="hidden">
+        <div class="ar-overlay-ui">
+            <div class="scanning-indicator">🎯 Scanning...</div>
+            <button id="close-ar-btn" class="close-btn">✕</button>
+        </div>
+        <a-scene embedded mindar-image="imageTargetSrc: ./AR/targets%201.mind; autoStart: false;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+            <a-assets>
+                <video id="video1" src="./AR/video/Video%201.mp4" playsinline webkit-playsinline crossorigin="anonymous"></video>
+                <video id="video2" src="./AR/video/Video%202.mp4" playsinline webkit-playsinline crossorigin="anonymous"></video>
+                <img id="finalImg1" src="./AR/final%20image/final%201.jpeg" crossorigin="anonymous">
+                <img id="finalImg2" src="./AR/final%20image/final%202.jpeg" crossorigin="anonymous">
+            </a-assets>
+            <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+            
+            <a-entity mindar-image-target="targetIndex: 0" id="target1">
+                <a-video src="#video1" position="0 0 0" height="1.41" width="1" rotation="0 0 0" id="ar-video1"></a-video>
+                <a-image src="#finalImg1" position="0 0 0" height="1.41" width="1" rotation="0 0 0" id="ar-image1" visible="false"></a-image>
+            </a-entity>
+            
+            <a-entity mindar-image-target="targetIndex: 1" id="target2">
+                <a-video src="#video2" position="0 0 0" height="1.5" width="1" rotation="0 0 0" id="ar-video2"></a-video>
+                <a-image src="#finalImg2" position="0 0 0" height="1.5" width="1" rotation="0 0 0" id="ar-image2" visible="false"></a-image>
+            </a-entity>
+        </a-scene>
+    </div>
+
+    <!-- Fallback Video (Hidden initially) -->
+    <div id="fallback-container" class="hidden">
+        <video id="fallback-video" src="./assets/video/birthday.mp4" controls playsinline></video>
+        <button id="close-fallback-btn" class="snap-pill-btn mt-4">Close Video</button>
+    </div>
+
+    <script src="./main.js"></script>
+    <script src="./stories.js"></script>
+    <script src="./ar.js"></script>
+</body>
+</html>

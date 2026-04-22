@@ -1,0 +1,314 @@
+/* ── Base ── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --snap-yellow: #FFFC00;
+}
+
+#spotlight-page {
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  overflow: hidden;
+  position: relative;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* ── Top header ── */
+#spotlight-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 100;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%);
+}
+.spotlight-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.header-left { display: flex; align-items: center; gap: 12px; }
+.ghost-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--snap-yellow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  border: 2px solid #fff;
+}
+.icon-btn {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  border-radius: 50%;
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+
+/* ── Feed container — CSS snap scroll ── */
+#spotlight-feed {
+  width: 100vw;
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+#spotlight-feed::-webkit-scrollbar { display: none; }
+
+/* ── Individual card ── */
+.spotlight-card {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.card-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.3s ease;
+  background: #000;
+}
+
+/* Gradient overlays */
+.card-gradient-top {
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 160px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+  pointer-events: none;
+}
+.card-gradient-bottom {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 300px;
+  background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+  pointer-events: none;
+}
+
+/* ── Right reaction rail ── */
+.reaction-rail {
+  position: absolute;
+  right: 14px;
+  bottom: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+}
+
+.emoji-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(12px);
+  padding: 15px 10px;
+  border-radius: 30px;
+  margin-bottom: 15px;
+  transition: opacity 0.2s, transform 0.2s;
+  opacity: 1;
+  transform: scale(1);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.emoji-picker.hidden {
+  opacity: 0;
+  transform: scale(0.8) translateY(20px);
+  pointer-events: none;
+}
+
+.emoji-picker-btn {
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.emoji-picker-btn .emoji {
+  font-size: 30px;
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+  transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.emoji-picker-btn:active .emoji { transform: scale(1.5); }
+
+.reaction-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.more-btn .emoji { font-size: 24px; color: #fff; font-weight: 900; background: rgba(0,0,0,0.5); padding: 8px; border-radius: 50%; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.2); }
+
+/* ── Bottom left info ── */
+.card-info {
+  position: absolute;
+  bottom: 85px;
+  left: 16px;
+  right: 80px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.sound-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 6px 14px;
+  width: fit-content;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+.sound-icon { font-size: 11px; }
+.username-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.user-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--snap-yellow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  border: 2px solid rgba(255,255,255,0.8);
+}
+.username {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+}
+.follow-btn {
+  background: rgba(255,255,255,0.25);
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: 20px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  text-transform: uppercase;
+}
+.card-caption {
+  color: rgba(255,255,255,0.95);
+  font-size: 14px;
+  line-height: 1.5;
+  text-shadow: 0 1px 5px rgba(0,0,0,0.8);
+  max-width: 280px;
+  font-weight: 500;
+}
+
+/* ── Bottom nav ── */
+#spotlight-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 72px;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(15px);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding-bottom: 10px;
+  z-index: 100;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.nav-btn {
+  background: none; border: none;
+  color: rgba(255,255,255,0.5);
+  font-size: 24px; cursor: pointer;
+  padding: 10px;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.nav-btn.active { color: #fff; transform: scale(1.1); }
+.center-btn .snap-dot {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  background: var(--snap-yellow);
+  border: 3px solid rgba(255,255,255,0.9);
+  box-shadow: 0 0 15px rgba(255, 252, 0, 0.4);
+}
+
+/* ── Floating particle emojis ── */
+.float-particle {
+  position: fixed;
+  font-size: 24px;
+  pointer-events: none;
+  z-index: 9999;
+  animation: particleFloat 1.2s ease-out forwards;
+}
+@keyframes particleFloat {
+  0%   { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+  50%  { opacity: 1; transform: translateY(-100px) scale(1.6) rotate(-20deg); }
+  100% { opacity: 0; transform: translateY(-180px) scale(0.6) rotate(15deg); }
+}
+
+/* ── Card entrance animation ── */
+.spotlight-card.entering .card-photo {
+  transform: scale(1.05);
+  transition: transform 0.6s cubic-bezier(0.2, 0, 0.2, 1);
+}
+.spotlight-card.entered .card-photo {
+  transform: scale(1);
+}
+
+/* ── Circular Progress at top right ── */
+.circular-progress {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  z-index: 200; /* Above the header */
+  transform: rotate(-90deg);
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+.circular-progress circle {
+  fill: none;
+  stroke-width: 4;
+}
+.bg-circle {
+  stroke: rgba(255, 255, 255, 0.2);
+}
+.progress-circle {
+  stroke: var(--snap-yellow);
+  stroke-linecap: round;
+  stroke-dasharray: 88; /* 2 * pi * 14 = 88 */
+  stroke-dashoffset: 88;
+}
+.active-card .progress-circle {
+    animation: circularGrow 8s linear forwards;
+}
+
+@keyframes circularGrow { to { stroke-dashoffset: 0; } }
+
+/* ── Heart Burst ── */
+@keyframes heartBurst {
+  0%   { transform: translate(-50%,-50%) scale(0); opacity: 1; }
+  50%  { transform: translate(-50%,-50%) scale(1.8); opacity: 1; filter: drop-shadow(0 0 10px rgba(255,0,0,0.5)); }
+  100% { transform: translate(-50%,-50%) scale(1.2); opacity: 0; }
+}

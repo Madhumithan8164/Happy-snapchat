@@ -1,0 +1,6 @@
+node_modules/
+temp_mindar/
+.DS_Store
+Thumbs.db
+cache/
+cache 1/

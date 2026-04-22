@@ -1,0 +1,49 @@
+.reaction-bar {
+    position: absolute;
+    top: -36px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 4px;
+    z-index: 200;
+    animation: reactionFadeIn 0.2s ease;
+}
+
+@keyframes reactionFadeIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(6px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.reaction-bar button {
+    background: rgba(0,0,0,0.85);
+    border: 1px solid rgba(255,252,0,0.3);
+    border-radius: 20px;
+    color: #fff;
+    font-size: 10px;
+    padding: 3px 6px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color 0.15s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.reaction-bar button:hover {
+    border-color: #FFFC00;
+    transform: scale(1.15);
+}
+
+.emoji-particle {
+    position: fixed;
+    font-size: 24px;
+    pointer-events: none;
+    z-index: 9999;
+    animation: floatUp 1.1s ease-out forwards;
+}
+
+@keyframes floatUp {
+    0%   { opacity: 1; transform: translateY(0) scale(1); }
+    60%  { opacity: 1; transform: translateY(-60px) scale(1.3); }
+    100% { opacity: 0; transform: translateY(-100px) scale(0.8); }
+}

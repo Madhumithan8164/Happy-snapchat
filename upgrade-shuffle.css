@@ -1,0 +1,44 @@
+#shuffle-btn {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 500;
+    background: #FFFC00;
+    color: #1a1a00;
+    font-size: 13px;
+    font-weight: 900;
+    padding: 12px 22px;
+    border-radius: 30px;
+    border: 3px solid black;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.03em;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 4px 4px 0 #000;
+}
+
+#shuffle-btn:hover { 
+    transform: scale(1.1) rotate(3deg); 
+    background: var(--accent-pink);
+    color: white;
+}
+
+#shuffle-btn:disabled { 
+    opacity: 0.5; 
+    cursor: not-allowed; 
+    transform: none; 
+}
+
+/* 3D flip — add perspective to parent grid */
+#honeycomb-grid { perspective: 2000px; }
+
+.hex-wrap {
+    transform-style: preserve-3d;
+    transition: transform 0.4s ease-in-out, opacity 0.4s;
+}
+
+.hex-wrap.flipping {
+    transform: rotateY(180deg) scale(0.6) !important;
+    filter: brightness(0.2);
+    opacity: 0.3;
+}
