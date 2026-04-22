@@ -23,6 +23,9 @@ const targetData = [
     { videoSrc: './AR/video/Video%202.mp4', imageSrc: './AR/final%20image/final%202.jpeg' }
 ];
 
+const LOOPS_BEFORE_IMAGE = 10;
+let videoLoopCount = 0;
+
 let arSceneReady = false;
 let pendingStart = false;
 let targets = [];
@@ -117,31 +120,68 @@ function showVideoModal(dataIndex) {
     const data = targetData[dataIndex];
     revealVideo.src = data.videoSrc;
     revealVideo.currentTime = 0;
+    videoLoopCount = 0;
+    updateLoopBadge();
     videoModal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
-    revealVideo.play().catch(e => {
-        console.warn('Video play failed:', e);
-        // Force muted play as fallback
+    revealVideo.play().catch(() => {
         revealVideo.muted = true;
         revealVideo.play();
     });
+}
+
+function updateLoopBadge() {
+    let badge = document.getElementById('loop-badge');
+    if (!badge) {
+        badge = document.createElement('div');
+        badge.id = 'loop-badge';
+        badge.style.cssText = `
+            position: absolute; bottom: 14px; left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            color: #FFFC00;
+            font-weight: 900;
+            font-size: 13px;
+            padding: 5px 14px;
+            border-radius: 20px;
+            border: 2px solid #FFFC00;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            z-index: 20;
+            font-family: 'DM Sans', sans-serif;
+        `;
+        document.querySelector('.video-modal-inner').appendChild(badge);
+    }
+    const remaining = LOOPS_BEFORE_IMAGE - videoLoopCount;
+    badge.textContent = remaining > 0 ? `🔁 ${remaining} plays left` : '🎉 Surprise incoming...';
 }
 
 closeVideoModalBtn.addEventListener('click', () => {
     videoModal.classList.add('hidden');
     revealVideo.pause();
     revealVideo.src = '';
+    videoLoopCount = 0;
     document.body.style.overflow = 'auto';
 });
 
 revealVideo.addEventListener('ended', () => {
-    videoModal.classList.add('hidden');
-    revealVideo.pause();
-    // Show final image
-    const currentSrc = revealVideo.getAttribute('data-image-src');
-    if (currentSrc) {
-        revealImage.src = currentSrc;
-        imageModal.classList.remove('hidden');
+    videoLoopCount++;
+    updateLoopBadge();
+
+    if (videoLoopCount < LOOPS_BEFORE_IMAGE) {
+        // Play again
+        revealVideo.currentTime = 0;
+        revealVideo.play().catch(() => {});
+    } else {
+        // All loops done — show final image
+        videoModal.classList.add('hidden');
+        revealVideo.pause();
+        const imageSrc = revealVideo.getAttribute('data-image-src');
+        if (imageSrc) {
+            revealImage.src = imageSrc;
+            imageModal.classList.remove('hidden');
+        }
+        videoLoopCount = 0;
     }
 });
 
