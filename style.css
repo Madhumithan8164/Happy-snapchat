@@ -669,7 +669,11 @@ button {
 /* --- AR Container (Existing) --- */
 .ar-ui { text-align: center; }
 .ar-instruction { margin-top: 1rem; font-weight: bold; }
-#ar-container, #fallback-container {
+#ar-container {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: transparent; z-index: 3000; display: flex; flex-direction: column; justify-content: center; align-items: center;
+}
+#fallback-container {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: rgba(0,0,0,0.9); z-index: 3000; display: flex; flex-direction: column; justify-content: center; align-items: center;
 }
