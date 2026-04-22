@@ -1,10 +1,13 @@
 const startArBtn = document.getElementById('start-ar-btn');
 const arContainer = document.getElementById('ar-container');
+const arSceneWrapper = document.getElementById('ar-scene-wrapper');
 const closeArBtn = document.getElementById('close-ar-btn');
 const fallbackContainer = document.getElementById('fallback-container');
 const closeFallbackBtn = document.getElementById('close-fallback-btn');
 const fallbackVideo = document.getElementById('fallback-video');
 const scanningIndicator = document.querySelector('.scanning-indicator');
+const viewfinder = document.querySelector('.viewfinder');
+const sceneEl = document.getElementById('ar-scene');
 
 // Setup targets
 const targets = [
@@ -22,45 +25,87 @@ const targets = [
     }
 ];
 
-// Handle starting AR
-startArBtn.addEventListener('click', () => {
-    // Show AR UI
+let arSceneReady = false;
+let pendingStart = false;
+
+// Wait for the A-Frame scene to fully load
+sceneEl.addEventListener('loaded', () => {
+    arSceneReady = true;
+    console.log('AR Scene loaded and ready');
+    if (pendingStart) {
+        pendingStart = false;
+        startAR();
+    }
+});
+
+function startAR() {
+    // Show the scene canvas and overlay
+    arSceneWrapper.classList.add('active');
     arContainer.classList.remove('hidden');
-    document.body.style.overflow = 'hidden'; // prevent scrolling
-    
-    // Start MindAR
-    const sceneEl = document.querySelector('a-scene');
-    if (sceneEl.systems.mindarimage) {
-        try {
+    document.body.style.overflow = 'hidden';
+
+    // Show scanning UI
+    if (scanningIndicator) scanningIndicator.classList.remove('hidden');
+    if (viewfinder) viewfinder.classList.remove('hidden');
+
+    try {
+        const mindARSystem = sceneEl.systems['mindar-image-system'];
+        if (mindARSystem) {
+            mindARSystem.start();
+        } else if (sceneEl.systems.mindarimage) {
             sceneEl.systems.mindarimage.start();
-        } catch (err) {
-            console.warn("Error starting MindAR", err);
-            // Fallback to plain video
-            fallbackContainer.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
+        } else {
+            console.warn('MindAR system not found');
+            showFallback();
         }
+    } catch (err) {
+        console.error('Failed to start MindAR:', err);
+        showFallback();
+    }
+}
+
+function showFallback() {
+    arContainer.classList.add('hidden');
+    arSceneWrapper.classList.remove('active');
+    fallbackContainer.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+// Handle "Scan Me" button click
+startArBtn.addEventListener('click', () => {
+    if (arSceneReady) {
+        startAR();
     } else {
-        // Fallback
-        fallbackContainer.classList.remove('hidden');
+        // Scene still loading — wait for it
+        pendingStart = true;
+        arSceneWrapper.classList.add('active'); // show loading state
+        arContainer.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
+        if (scanningIndicator) scanningIndicator.textContent = '⏳ Loading AR...';
     }
 });
 
 // Close AR
 closeArBtn.addEventListener('click', () => {
     arContainer.classList.add('hidden');
+    arSceneWrapper.classList.remove('active');
     document.body.style.overflow = 'auto';
-    
-    // Stop MindAR
-    const sceneEl = document.querySelector('a-scene');
-    if (sceneEl.systems.mindarimage) {
-        sceneEl.systems.mindarimage.stop();
-    }
-    
-    // Pause all videos
+
+    try {
+        const mindARSystem = sceneEl.systems['mindar-image-system'] || sceneEl.systems.mindarimage;
+        if (mindARSystem) mindARSystem.stop();
+    } catch (e) { /* ignore */ }
+
     targets.forEach(t => {
-        if (t.videoEl) t.videoEl.pause();
+        if (t.videoEl) { t.videoEl.pause(); t.videoEl.currentTime = 0; }
     });
+
+    // Reset scanning UI for next time
+    if (scanningIndicator) { 
+        scanningIndicator.classList.remove('hidden');
+        scanningIndicator.textContent = '🎯 Point at the Photo...';
+    }
+    if (viewfinder) viewfinder.classList.remove('hidden');
 });
 
 // Close Fallback
@@ -71,33 +116,30 @@ closeFallbackBtn.addEventListener('click', () => {
 });
 
 // Handle MindAR Target Found / Lost / Ended
-const viewfinder = document.querySelector('.viewfinder');
-
 targets.forEach(t => {
     if (t.targetEl && t.videoEl) {
+
         t.targetEl.addEventListener('targetFound', () => {
-            console.log("Target found", t.targetEl.id);
+            console.log('Target found:', t.targetEl.id);
             if (scanningIndicator) scanningIndicator.classList.add('hidden');
             if (viewfinder) viewfinder.classList.add('hidden');
-            
-            // Show video, hide image
+
             if (t.arVideoEl) t.arVideoEl.setAttribute('visible', 'true');
             if (t.arImageEl) t.arImageEl.setAttribute('visible', 'false');
-            
+
             t.videoEl.currentTime = 0;
-            t.videoEl.play();
+            t.videoEl.play().catch(e => console.warn('Video play failed:', e));
         });
 
         t.targetEl.addEventListener('targetLost', () => {
-            console.log("Target lost", t.targetEl.id);
+            console.log('Target lost:', t.targetEl.id);
             if (scanningIndicator) scanningIndicator.classList.remove('hidden');
             if (viewfinder) viewfinder.classList.remove('hidden');
             t.videoEl.pause();
         });
 
         t.videoEl.addEventListener('ended', () => {
-            console.log("Video ended", t.targetEl.id);
-            // Hide video, show image
+            console.log('Video ended:', t.targetEl.id);
             if (t.arVideoEl) t.arVideoEl.setAttribute('visible', 'false');
             if (t.arImageEl) t.arImageEl.setAttribute('visible', 'true');
         });
