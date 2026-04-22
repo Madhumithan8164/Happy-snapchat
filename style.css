@@ -677,8 +677,69 @@ button {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: rgba(0,0,0,0.9); z-index: 3000; display: flex; flex-direction: column; justify-content: center; align-items: center;
 }
-.ar-overlay-ui { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3001; display: flex; flex-direction: column; justify-content: space-between; padding: 2rem; }
-.scanning-indicator { align-self: center; background: var(--card-bg); border: 4px solid var(--comic-black); box-shadow: 6px 6px 0 var(--comic-black); padding: 10px 20px; border-radius: 30px; font-weight: 900; animation: pulse 1.5s infinite; }
+.ar-overlay-ui { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+    pointer-events: none; z-index: 3001; 
+    display: flex; flex-direction: column; justify-content: center; align-items: center; 
+    background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.4) 100%);
+}
+
+#close-ar-btn {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    pointer-events: auto;
+}
+
+.viewfinder {
+    position: relative;
+    width: 80vw;
+    height: 60vh;
+    max-width: 350px;
+    max-height: 500px;
+}
+
+.viewfinder .corner {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--snap-yellow);
+    filter: drop-shadow(2px 2px 0 var(--comic-black));
+}
+
+.corner.top-left { top: 0; left: 0; border-right: none; border-bottom: none; border-radius: 12px 0 0 0; }
+.corner.top-right { top: 0; right: 0; border-left: none; border-bottom: none; border-radius: 0 12px 0 0; }
+.corner.bottom-left { bottom: 0; left: 0; border-right: none; border-top: none; border-radius: 0 0 0 12px; }
+.corner.bottom-right { bottom: 0; right: 0; border-left: none; border-top: none; border-radius: 0 0 12px 0; }
+
+.scanning-line {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 4px;
+    background: var(--snap-yellow);
+    box-shadow: 0 0 15px var(--snap-yellow), 0 0 5px var(--snap-yellow);
+    animation: scanLine 2.5s infinite linear;
+    border-radius: 2px;
+}
+
+@keyframes scanLine {
+    0% { top: 0%; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+}
+
+.scanning-indicator { 
+    position: absolute;
+    bottom: 50px;
+    background: var(--card-bg); 
+    border: 4px solid var(--comic-black); 
+    box-shadow: 6px 6px 0 var(--comic-black); 
+    padding: 10px 20px; 
+    border-radius: 30px; 
+    font-weight: 900; 
+    text-transform: uppercase;
+    animation: pulse 1.5s infinite; 
+}
 #fallback-video { max-width: 90%; max-height: 80vh; border: 6px solid var(--comic-black); border-radius: 12px; box-shadow: 10px 10px 0 var(--comic-black); }
 
 /* Utilities */

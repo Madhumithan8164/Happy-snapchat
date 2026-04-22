@@ -71,11 +71,14 @@ closeFallbackBtn.addEventListener('click', () => {
 });
 
 // Handle MindAR Target Found / Lost / Ended
+const viewfinder = document.querySelector('.viewfinder');
+
 targets.forEach(t => {
     if (t.targetEl && t.videoEl) {
         t.targetEl.addEventListener('targetFound', () => {
             console.log("Target found", t.targetEl.id);
-            scanningIndicator.classList.add('hidden');
+            if (scanningIndicator) scanningIndicator.classList.add('hidden');
+            if (viewfinder) viewfinder.classList.add('hidden');
             
             // Show video, hide image
             if (t.arVideoEl) t.arVideoEl.setAttribute('visible', 'true');
@@ -87,7 +90,8 @@ targets.forEach(t => {
 
         t.targetEl.addEventListener('targetLost', () => {
             console.log("Target lost", t.targetEl.id);
-            scanningIndicator.classList.remove('hidden');
+            if (scanningIndicator) scanningIndicator.classList.remove('hidden');
+            if (viewfinder) viewfinder.classList.remove('hidden');
             t.videoEl.pause();
         });
 

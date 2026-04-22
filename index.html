@@ -173,10 +173,17 @@
     <!-- AR Container (Hidden initially) -->
     <div id="ar-container" class="hidden">
         <div class="ar-overlay-ui">
-            <div class="scanning-indicator">🎯 Scanning...</div>
             <button id="close-ar-btn" class="close-btn">✕</button>
+            <div class="viewfinder">
+                <div class="corner top-left"></div>
+                <div class="corner top-right"></div>
+                <div class="corner bottom-left"></div>
+                <div class="corner bottom-right"></div>
+                <div class="scanning-line"></div>
+            </div>
+            <div class="scanning-indicator">🎯 Point at the Photo...</div>
         </div>
-        <a-scene embedded mindar-image="imageTargetSrc: ./AR/targets%201.mind; autoStart: false;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+        <a-scene embedded mindar-image="imageTargetSrc: ./AR/targets%201.mind; autoStart: false; uiScanning: no; uiLoading: no;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
             <a-assets>
                 <video id="video1" src="./AR/video/Video%201.mp4" playsinline webkit-playsinline crossorigin="anonymous"></video>
                 <video id="video2" src="./AR/video/Video%202.mp4" playsinline webkit-playsinline crossorigin="anonymous"></video>
