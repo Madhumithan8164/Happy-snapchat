@@ -23,26 +23,24 @@ const targets = [
 ];
 
 // Handle starting AR
-startArBtn.addEventListener('click', async () => {
-    // Check camera permission first
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        // Permission granted, close stream to let A-Frame use it
-        stream.getTracks().forEach(track => track.stop());
-        
-        // Show AR UI
-        arContainer.classList.remove('hidden');
-        document.body.style.overflow = 'hidden'; // prevent scrolling
-        
-        // Start MindAR
-        const sceneEl = document.querySelector('a-scene');
-        if (sceneEl.systems.mindarimage) {
+startArBtn.addEventListener('click', () => {
+    // Show AR UI
+    arContainer.classList.remove('hidden');
+    document.body.style.overflow = 'hidden'; // prevent scrolling
+    
+    // Start MindAR
+    const sceneEl = document.querySelector('a-scene');
+    if (sceneEl.systems.mindarimage) {
+        try {
             sceneEl.systems.mindarimage.start();
+        } catch (err) {
+            console.warn("Error starting MindAR", err);
+            // Fallback to plain video
+            fallbackContainer.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
         }
-
-    } catch (err) {
-        console.warn("Camera permission denied or not available.", err);
-        // Fallback to plain video
+    } else {
+        // Fallback
         fallbackContainer.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
     }
