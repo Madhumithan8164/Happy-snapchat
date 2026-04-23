@@ -1193,19 +1193,28 @@ body > video:not(#fallback-video):not(#video1):not(#video2) {
 }
 
 .gallery-add-btn {
-    width: 42px;
-    height: 42px;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     background: var(--comic-black);
-    border: 3px solid var(--comic-black);
-    box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+    border: 4px solid var(--comic-black);
+    box-shadow: 6px 6px 0 rgba(0,0,0,0.3);
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--snap-yellow);
     cursor: pointer;
     transition: all 0.2s ease;
-    flex-shrink: 0;
+    z-index: 1000;
+}
+
+.gallery-add-btn:hover {
+    transform: scale(1.1) rotate(90deg);
+    background: var(--accent-pink);
+    box-shadow: 8px 8px 0 rgba(0,0,0,0.4);
 }
 
 .gallery-add-btn:hover {
@@ -1334,12 +1343,19 @@ body > video:not(#fallback-video):not(#video1):not(#video2) {
         text-align: center;
     }
 
-    .gallery-back-btn,
-    .gallery-add-btn {
+    .gallery-back-btn {
         width: 32px;
         height: 32px;
         border-width: 2px;
-        font-size: 0.9rem;
+    }
+
+    .gallery-add-btn {
+        width: 50px;
+        height: 50px;
+        bottom: 20px;
+        right: 20px;
+        border-width: 3px;
+        font-size: 1.5rem;
     }
 
     .gallery-ghost {
