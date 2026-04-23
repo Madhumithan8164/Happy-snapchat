@@ -68,7 +68,8 @@
             box-shadow: 0 0 20px rgba(255, 252, 0, 0.3);
         }
 
-        .secret-item img {
+        .secret-item img,
+        .secret-item video {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -76,8 +77,33 @@
             transition: opacity 0.3s;
         }
 
-        .secret-item:hover img {
+        .secret-item:hover img,
+        .secret-item:hover video {
             opacity: 1;
+        }
+
+        .secret-item .video-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0,0,0,0.7);
+            color: #fff;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .lightbox-video {
+            max-width: 90vw;
+            max-height: 85vh;
+            border-radius: 8px;
+            outline: none;
         }
 
         .no-access {
@@ -173,37 +199,126 @@
         const lightboxImg = document.getElementById('lightbox-img');
         const lightboxClose = document.querySelector('.lightbox-close');
 
-        function openLightbox(url) {
-            lightboxImg.src = url;
+        function openLightbox(url, isVideo) {
+            // Remove any previous lightbox video
+            const oldVid = lightbox.querySelector('.lightbox-video');
+            if (oldVid) oldVid.remove();
+
+            if (isVideo) {
+                lightboxImg.classList.add('hidden');
+                const video = document.createElement('video');
+                video.src = url;
+                video.controls = true;
+                video.autoplay = true;
+                video.playsInline = true;
+                video.className = 'lightbox-video';
+                lightbox.appendChild(video);
+            } else {
+                lightboxImg.classList.remove('hidden');
+                lightboxImg.src = url;
+            }
+
             lightbox.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
 
+        function closeLightbox() {
+            const vid = lightbox.querySelector('.lightbox-video');
+            if (vid) { vid.pause(); vid.remove(); }
+            lightboxImg.classList.remove('hidden');
+            lightboxImg.src = '';
+            lightbox.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
         if (lightboxClose) {
-            lightboxClose.addEventListener('click', () => {
-                lightbox.classList.add('hidden');
-                document.body.style.overflow = 'auto';
-            });
+            lightboxClose.addEventListener('click', closeLightbox);
             lightbox.addEventListener('click', (e) => {
-                if (e.target === lightbox) {
-                    lightbox.classList.add('hidden');
-                    document.body.style.overflow = 'auto';
-                }
+                if (e.target === lightbox) closeLightbox();
             });
+        }
+
+        /**
+         * Detect if a .dat file is a video by reading its magic bytes.
+         * MP4/MOV: bytes 4-7 = "ftyp"
+         * WebM:    bytes 0-3 = 0x1A45DFA3
+         * AVI:     bytes 0-3 = "RIFF" and bytes 8-11 = "AVI "
+         */
+        async function isVideoFile(url) {
+            try {
+                const resp = await fetch(url, { headers: { 'Range': 'bytes=0-11' } });
+                const buf = await resp.arrayBuffer();
+                const bytes = new Uint8Array(buf);
+
+                // Check for MP4/MOV ("ftyp" at offset 4)
+                if (bytes.length >= 8) {
+                    const ftyp = String.fromCharCode(bytes[4], bytes[5], bytes[6], bytes[7]);
+                    if (ftyp === 'ftyp') return true;
+                }
+
+                // Check for WebM (EBML header: 0x1A 0x45 0xDF 0xA3)
+                if (bytes[0] === 0x1A && bytes[1] === 0x45 && bytes[2] === 0xDF && bytes[3] === 0xA3) return true;
+
+                // Check for AVI ("RIFF" + "AVI ")
+                if (bytes.length >= 12) {
+                    const riff = String.fromCharCode(bytes[0], bytes[1], bytes[2], bytes[3]);
+                    const avi = String.fromCharCode(bytes[8], bytes[9], bytes[10], bytes[11]);
+                    if (riff === 'RIFF' && avi === 'AVI ') return true;
+                }
+
+                return false;
+            } catch (e) {
+                return false;
+            }
         }
 
         async function loadSecretPhotos() {
             const grid = document.getElementById('secret-grid');
             
+            // Create all items first for instant layout, then upgrade videos
+            const items = [];
             for (let i = 1; i <= TOTAL_STEALTH_FILES; i++) {
                 const url = `${STEALTH_PATH}sys_cache_${i}.dat`;
                 const item = document.createElement('div');
                 item.className = 'secret-item';
                 item.innerHTML = `<img src="${url}" alt="System Data">`;
-                
-                item.addEventListener('click', () => openLightbox(url));
-                
+                item.dataset.url = url;
+                item.dataset.index = i;
                 grid.appendChild(item);
+                items.push(item);
+            }
+
+            // Now detect videos in batches and upgrade them
+            const BATCH = 10;
+            for (let b = 0; b < items.length; b += BATCH) {
+                const batch = items.slice(b, b + BATCH);
+                await Promise.all(batch.map(async (item) => {
+                    const url = item.dataset.url;
+                    const isVid = await isVideoFile(url);
+                    
+                    if (isVid) {
+                        // Replace <img> with <video>
+                        item.innerHTML = '';
+                        const video = document.createElement('video');
+                        video.src = url;
+                        video.muted = true;
+                        video.loop = true;
+                        video.playsInline = true;
+                        video.preload = 'metadata';
+                        item.appendChild(video);
+
+                        const badge = document.createElement('div');
+                        badge.className = 'video-badge';
+                        badge.textContent = '▶';
+                        item.appendChild(badge);
+
+                        // Play on hover
+                        item.addEventListener('mouseenter', () => video.play());
+                        item.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
+                    }
+
+                    item.addEventListener('click', () => openLightbox(url, isVid));
+                }));
             }
         }
     </script>
