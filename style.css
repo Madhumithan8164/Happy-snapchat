@@ -1308,45 +1308,72 @@ body > video:not(#fallback-video):not(#video1):not(#video2) {
     text-shadow: 2px 2px 0 var(--card-bg);
 }
 
+.typewriter-text {
+    font-family: var(--font-handwritten);
+    font-size: 1.6rem;
+    color: var(--comic-black);
+    min-height: 2.5rem;
+    margin: 10px 0 20px 0;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 var(--card-bg);
+}
+
 /* --- Mobile Responsive --- */
 @media (max-width: 768px) {
+    .typewriter-text { font-size: 1.3rem; min-height: 2rem; padding: 0 10px; }
+    
     .gallery-top-bar {
-        padding: 10px 12px;
-        gap: 8px;
+        padding: 8px 10px;
+        gap: 6px;
     }
 
     .gallery-page-title {
-        font-size: 1rem;
+        font-size: 0.9rem;
+        max-width: 140px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .gallery-back-btn,
     .gallery-add-btn {
-        width: 36px;
-        height: 36px;
+        width: 34px;
+        height: 34px;
         border-width: 2px;
     }
 
     .gallery-ghost {
-        width: 22px;
-        height: 22px;
+        width: 20px;
+        height: 20px;
     }
 
-    .gallery-filter-bar {
+    .chat-header {
         padding: 8px 12px;
-        gap: 6px;
-        justify-content: flex-start;
+        gap: 8px;
     }
 
-    .gallery-filter-btn {
-        padding: 6px 14px;
-        font-size: 0.75rem;
-        border-width: 1.5px;
+    .chat-name { font-size: 0.85rem; }
+    .chat-status { font-size: 0.65rem; }
+    .avatar-circle { width: 32px; height: 32px; }
+
+    .chat-footer {
+        padding: 8px 10px;
+        gap: 8px;
+    }
+
+    .chat-input {
+        padding: 10px 15px;
+        font-size: 0.85rem;
+    }
+
+    .chat-send-btn {
+        width: 38px;
+        height: 38px;
     }
 
     .year-title {
-        font-size: 1.4rem;
-        padding: 6px 12px;
-        border-left-width: 4px;
+        font-size: 1.2rem;
+        padding: 5px 10px;
     }
 }
 
@@ -1361,7 +1388,7 @@ body > video:not(#fallback-video):not(#video1):not(#video2) {
 .ar-hint {
     margin-top: 5px;
     font-family: var(--font-handwritten);
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     color: var(--comic-black);
     text-align: center;
     opacity: 0.8;
