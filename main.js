@@ -329,7 +329,7 @@ if (secretInput) {
             if (secretInput.value.trim() === '69 & 96' || secretInput.value.trim() === '69&96') {
                 document.body.classList.add('flash-effect');
                 setTimeout(() => {
-                    window.location.href = 'secret.html';
+                    window.location.href = 'memories.html';
                 }, 500);
             } else {
                 secretInput.style.borderColor = 'red';
