@@ -33,7 +33,25 @@
   letter-spacing: 0.02em;
   text-transform: uppercase;
 }
-.header-left { display: flex; align-items: center; gap: 12px; }
+.header-left { display: flex; align-items: center; gap: 8px; }
+.spotlight-back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-decoration: none;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.spotlight-back-btn:hover {
+  background: rgba(255,255,255,0.3);
+  transform: scale(1.05);
+}
 .ghost-avatar {
   width: 36px; height: 36px;
   border-radius: 50%;

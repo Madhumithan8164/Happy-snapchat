@@ -541,6 +541,8 @@ button {
 
 .right-deco {
     right: 2%;
+    bottom: 30px; /* Moved up */
+    max-width: 380px; /* Bigger */
     transform-origin: bottom right;
     animation: sway 4s ease-in-out infinite alternate-reverse;
 }
@@ -634,20 +636,64 @@ button {
 }
 
 .chat-footer {
-    padding: 15px;
+    padding: 12px 15px;
     border-top: 4px solid var(--comic-black);
     background: var(--snap-yellow);
     display: flex;
     align-items: center;
+    gap: 10px;
 }
 
 .chat-input {
-    width: 100%;
+    flex: 1;
     background: var(--card-bg);
     border: 3px solid var(--comic-black);
     border-radius: 30px;
     padding: 12px 20px;
     color: var(--comic-black);
+    font-weight: bold;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.chat-input:focus {
+    transform: scale(1.02);
+}
+
+.chat-send-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #0084ff;
+    color: white;
+    border: 3px solid var(--comic-black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 var(--comic-black);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.chat-send-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 5px 5px 0 var(--comic-black);
+    background: #0077e6;
+}
+
+.chat-send-btn:active {
+    transform: translateY(2px);
+    box-shadow: 1px 1px 0 var(--comic-black);
+}
+
+.chat-send-btn svg {
+    margin-right: 2px;
+    margin-top: -1px;
+}
     font-weight: 900;
     box-shadow: inset 3px 3px 0 rgba(0,0,0,0.1);
     outline: none;
@@ -910,19 +956,8 @@ body > video:not(#fallback-video):not(#video1):not(#video2) {
     opacity: 0;
 }
 
-.year-section {
-    margin-bottom: 4rem;
-}
+/* year-section and year-title styles are in the Gallery Header section below */
 
-.year-title {
-    font-size: 2.5rem;
-    color: var(--comic-black);
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    border-left: 10px solid var(--accent-pink);
-    padding-left: 1rem;
-    text-shadow: 2px 2px 0 var(--card-bg);
-}
 
 .vault-footer {
     display: flex;
@@ -1086,7 +1121,249 @@ body > video:not(#fallback-video):not(#video1):not(#video2) {
     padding: 1rem;
     margin: 1rem 0;
     font-family: monospace;
-    max-height: 200px;
     overflow-y: auto;
     border: 2px solid #ccc;
 }
+
+/* --- Gallery Page Header (Redesigned) --- */
+.gallery-header {
+    position: sticky;
+    top: 0;
+    z-index: 500;
+    background: var(--snap-yellow);
+    border-bottom: 4px solid var(--comic-black);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.gallery-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    gap: 12px;
+}
+
+.gallery-back-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--card-bg);
+    border: 3px solid var(--comic-black);
+    box-shadow: 3px 3px 0 var(--comic-black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--comic-black);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.gallery-back-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 5px 5px 0 var(--comic-black);
+    background: #ff5e5e;
+    color: white;
+}
+
+.gallery-title-block {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    justify-content: center;
+    min-width: 0;
+}
+
+.gallery-ghost {
+    flex-shrink: 0;
+    filter: drop-shadow(2px 2px 0 var(--card-bg));
+    animation: float 3s ease-in-out infinite;
+}
+
+.gallery-page-title {
+    font-size: 1.4rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
+    text-shadow: 2px 2px 0 var(--card-bg);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gallery-add-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--comic-black);
+    border: 3px solid var(--comic-black);
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--snap-yellow);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.gallery-add-btn:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 5px 5px 0 rgba(0,0,0,0.4);
+    background: var(--accent-pink);
+    color: white;
+}
+
+/* --- Sticky Filter Bar (Redesigned) --- */
+.gallery-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    overflow-x: auto;
+    background: var(--comic-black);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.gallery-filter-bar::-webkit-scrollbar {
+    display: none;
+}
+
+.gallery-filter-btn {
+    position: relative;
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.6);
+    border: 2px solid rgba(255,255,255,0.12);
+    padding: 7px 20px;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    font-family: var(--font-primary);
+    outline: none;
+}
+
+.gallery-filter-btn:hover {
+    background: rgba(255,252,0,0.1);
+    color: var(--snap-yellow);
+    border-color: rgba(255,252,0,0.3);
+    transform: translateY(-1px);
+}
+
+.gallery-filter-btn.active {
+    background: var(--snap-yellow);
+    color: var(--comic-black);
+    border-color: var(--snap-yellow);
+    box-shadow: 0 0 12px rgba(255,252,0,0.4), 0 2px 8px rgba(0,0,0,0.3);
+    transform: scale(1);
+}
+
+.gallery-filter-btn .filter-label {
+    position: relative;
+    z-index: 1;
+}
+
+.gallery-filter-btn .filter-count {
+    display: inline-block;
+    margin-left: 5px;
+    background: rgba(255,255,255,0.15);
+    padding: 1px 7px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    vertical-align: middle;
+}
+
+.gallery-filter-btn.active .filter-count {
+    background: rgba(0,0,0,0.15);
+}
+
+/* Year Section Dividers */
+.year-section {
+    margin-bottom: 3rem;
+    animation: fadeInSection 0.4s ease;
+}
+
+@keyframes fadeInSection {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.year-title {
+    font-size: 2rem;
+    color: var(--comic-black);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    padding: 8px 16px;
+    display: inline-block;
+    border-left: 6px solid var(--accent-pink);
+    background: rgba(0,0,0,0.04);
+    border-radius: 0 8px 8px 0;
+    text-shadow: 2px 2px 0 var(--card-bg);
+}
+
+/* --- Mobile Responsive --- */
+@media (max-width: 768px) {
+    .gallery-top-bar {
+        padding: 10px 12px;
+        gap: 8px;
+    }
+
+    .gallery-page-title {
+        font-size: 1rem;
+    }
+
+    .gallery-back-btn,
+    .gallery-add-btn {
+        width: 36px;
+        height: 36px;
+        border-width: 2px;
+    }
+
+    .gallery-ghost {
+        width: 22px;
+        height: 22px;
+    }
+
+    .gallery-filter-bar {
+        padding: 8px 12px;
+        gap: 6px;
+        justify-content: flex-start;
+    }
+
+    .gallery-filter-btn {
+        padding: 6px 14px;
+        font-size: 0.75rem;
+        border-width: 1.5px;
+    }
+
+    .year-title {
+        font-size: 1.4rem;
+        padding: 6px 12px;
+        border-left-width: 4px;
+    }
+}
+
+.ar-ui {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.ar-hint {
+    margin-top: 5px;
+    font-family: var(--font-handwritten);
+    font-size: 1.4rem;
+    color: var(--comic-black);
+    text-align: center;
+    opacity: 0.8;
+}
+

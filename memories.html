@@ -28,7 +28,42 @@
             padding: 4rem 2rem;
             text-align: center;
             border-bottom: 4px solid var(--snap-yellow);
+            position: relative;
         }
+
+        .vault-back-btn {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #222;
+            border: 2px solid var(--snap-yellow);
+            color: var(--snap-yellow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .vault-back-btn:hover {
+            background: var(--snap-yellow);
+            color: #000;
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .vault-back-btn {
+                top: 1rem;
+                left: 1rem;
+                width: 36px;
+                height: 36px;
+            }
+        }
+
 
         .vault-icon {
             font-size: 4rem;
@@ -148,6 +183,11 @@
 
     <div id="content" class="hidden">
         <header class="secret-header">
+            <a href="index.html" class="vault-back-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 18l-6-6 6-6"/>
+                </svg>
+            </a>
             <span class="vault-icon">🔒</span>
             <h1 class="secret-title">My Eyes Only</h1>
             <p style="font-family: var(--font-handwritten); font-size: 1.5rem; margin-top: 1rem;">Our little secret...</p>

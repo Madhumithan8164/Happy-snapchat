@@ -153,7 +153,7 @@ function initHeroAnimations() {
 const enterBtn = document.getElementById('enter-btn');
 if (enterBtn) {
     enterBtn.addEventListener('click', () => {
-        document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
+        window.open('https://www.snapchat.com/add/madhumithan816', '_blank');
     });
 }
 
@@ -323,19 +323,33 @@ ScrollTrigger.create({
 
 // Secret Vault Password trigger
 const secretInput = document.getElementById('chat-secret-input');
+const sendBtn = document.getElementById('send-chat-btn');
+
+function checkChatPassword() {
+    if (!secretInput) return;
+    const val = secretInput.value.trim();
+    if (val === '69 & 96' || val === '69&96') {
+        document.body.classList.add('flash-effect');
+        setTimeout(() => {
+            window.location.href = 'memories.html';
+        }, 500);
+    } else {
+        // Shake animation for error
+        gsap.to(secretInput, { x: 10, repeat: 5, yoyo: true, duration: 0.05, onComplete: () => {
+            gsap.set(secretInput, { x: 0 });
+            secretInput.style.borderColor = 'red';
+            setTimeout(() => secretInput.style.borderColor = '', 1000);
+            secretInput.value = '';
+        }});
+    }
+}
+
 if (secretInput) {
     secretInput.addEventListener('keyup', (e) => {
-        if (e.key === 'Enter') {
-            if (secretInput.value.trim() === '69 & 96' || secretInput.value.trim() === '69&96') {
-                document.body.classList.add('flash-effect');
-                setTimeout(() => {
-                    window.location.href = 'memories.html';
-                }, 500);
-            } else {
-                secretInput.style.borderColor = 'red';
-                setTimeout(() => secretInput.style.borderColor = '', 1000);
-                secretInput.value = '';
-            }
-        }
+        if (e.key === 'Enter') checkChatPassword();
     });
+}
+
+if (sendBtn) {
+    sendBtn.addEventListener('click', checkChatPassword);
 }

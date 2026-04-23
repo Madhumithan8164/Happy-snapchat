@@ -128,6 +128,12 @@
                     <div class="read-receipt hidden">Opened 💛 just now</div>
                     <div class="chat-footer">
                         <input type="text" id="chat-secret-input" class="chat-input" placeholder="Send a chat..." autocomplete="off">
+                        <button id="send-chat-btn" class="chat-send-btn" title="Send Chat">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </button>
                     </div>
                 </div>
             </section>
@@ -140,7 +146,8 @@
                 
                 <h2 class="section-title">Scan the Frame</h2>
                 <div class="ar-ui">
-                    <button id="start-ar-btn" class="snap-pill-btn">Scan Me 📷</button>
+                    <button id="start-ar-btn" class="snap-pill-btn">OPEN CAM 📷</button>
+                    <p class="ar-hint">Scan the birthday frame to see it come to life... ✨</p>
                 </div>
             </section>
 
@@ -203,7 +210,7 @@
                 <div class="corner bottom-right"></div>
                 <div class="scanning-line"></div>
             </div>
-            <div class="scanning-indicator">🎯 Point at the Photo...</div>
+            <div class="scanning-indicator">🎯 Point at the Frame...</div>
         </div>
     </div>
     <!-- Full-screen Video Modal (triggered on target detection) -->

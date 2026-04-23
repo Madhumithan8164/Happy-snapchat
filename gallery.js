@@ -39,8 +39,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('./photos.json');
             if (response.ok) {
                 const yearsData = await response.json(); // Format: { "2021": ["img1.jpg", "img2.jpg"], "2022": [...] }
+                const years = Object.keys(yearsData).sort((a, b) => b - a);
                 
-                Object.keys(yearsData).sort((a, b) => b - a).forEach(year => {
+                // Setup Filters
+                setupFilters(years, yearsData);
+
+                years.forEach(year => {
                     const section = createYearSection(year);
                     const grid = section.querySelector('.gallery-grid');
                     yearsData[year].forEach(fileName => {
@@ -57,6 +61,70 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (e) {
             console.error("Error loading photos.json:", e);
+        }
+    }
+
+    const filterContainer = document.getElementById('filter-container');
+
+    function setupFilters(years, yearsData) {
+        if (!filterContainer) return;
+        
+        const allBtn = filterContainer.querySelector('[data-year="all"]');
+        if (allBtn) {
+            allBtn.onclick = () => filterByYear('all', allBtn);
+        }
+
+        years.forEach(year => {
+            const btn = document.createElement('button');
+            btn.className = 'gallery-filter-btn';
+            btn.dataset.year = year;
+            btn.innerHTML = `<span class="filter-label">${year}</span>`;
+            btn.onclick = () => filterByYear(year, btn);
+            filterContainer.appendChild(btn);
+        });
+    }
+
+    function filterByYear(year, clickedBtn) {
+        // Update button active state
+        document.querySelectorAll('.gallery-filter-btn').forEach(btn => btn.classList.remove('active'));
+        clickedBtn.classList.add('active');
+
+        const sections = document.querySelectorAll('.year-section');
+        sections.forEach(section => {
+            // Find the year title in this section
+            const titleEl = section.querySelector('.year-title');
+            if (!titleEl) return;
+
+            const sectionYear = titleEl.textContent.trim();
+            
+            // Handle "Latest Snaps" section (id="recent-snaps")
+            if (section.id === 'recent-snaps') {
+                section.classList.toggle('hidden', year !== 'all');
+                return;
+            }
+
+            if (year === 'all') {
+                section.style.display = '';
+                // Re-trigger entrance animation
+                section.style.animation = 'none';
+                section.offsetHeight; // force reflow
+                section.style.animation = '';
+            } else {
+                if (sectionYear === year) {
+                    section.style.display = '';
+                    section.style.animation = 'none';
+                    section.offsetHeight;
+                    section.style.animation = '';
+                } else {
+                    section.style.display = 'none';
+                }
+            }
+        });
+
+        // Smooth scroll to gallery content
+        const gallery = document.getElementById('standard-gallery');
+        if (gallery) {
+            gallery.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }
 

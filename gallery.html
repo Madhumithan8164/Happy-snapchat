@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Crazy Memories</title>
+    <title>Our Masth Memories</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,24 +23,37 @@
 <body>
 
     <!-- Header -->
-    <header class="comic-header">
-        <div class="header-content">
-            <svg class="header-ghost" width="40" height="40" viewBox="0 0 24 24" fill="#000" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2C7.58 2 4 5.58 4 10V18C4 19.33 4.8 20.21 5.91 21.03C6.46 21.43 7.21 21.36 7.7 20.87L8.64 19.93C9.03 19.54 9.66 19.54 10.05 19.93L11.29 21.17C11.68 21.56 12.31 21.56 12.7 21.17L13.94 19.93C14.33 19.54 14.96 19.54 15.35 19.93L16.29 20.87C16.78 21.36 17.53 21.43 18.08 21.03C19.19 20.21 20 19.33 20 18V10C20 5.58 16.42 2 12 2Z"/>
-                <ellipse cx="8" cy="11" rx="1" ry="1" fill="#fff" />
-                <ellipse cx="16" cy="11" rx="1" ry="1" fill="#fff" />
-            </svg>
-            <h1 class="header-title">OUR CRAZY MEMORIES - My Kathe's Birthday Edition</h1>
-        </div>
-        
-        <div class="action-bar">
-            <div class="view-toggle">
-                <button id="grid-view-btn" class="comic-btn active" style="background: var(--snap-yellow); color: #000; display: none;">[GRID VIEW]</button>
+    <header class="gallery-header">
+        <!-- Top Row: Back + Title + Add -->
+        <div class="gallery-top-bar">
+            <a href="index.html" class="gallery-back-btn" title="Go Back">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+            </a>
+            <div class="gallery-title-block">
+                <svg class="gallery-ghost" width="28" height="28" viewBox="0 0 24 24" fill="#000" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C7.58 2 4 5.58 4 10V18C4 19.33 4.8 20.21 5.91 21.03C6.46 21.43 7.21 21.36 7.7 20.87L8.64 19.93C9.03 19.54 9.66 19.54 10.05 19.93L11.29 21.17C11.68 21.56 12.31 21.56 12.7 21.17L13.94 19.93C14.33 19.54 14.96 19.54 15.35 19.93L16.29 20.87C16.78 21.36 17.53 21.43 18.08 21.03C19.19 20.21 20 19.33 20 18V10C20 5.58 16.42 2 12 2Z"/>
+                    <ellipse cx="8" cy="11" rx="1" ry="1" fill="#fff" />
+                    <ellipse cx="16" cy="11" rx="1" ry="1" fill="#fff" />
+                </svg>
+                <h1 class="gallery-page-title">Our Masth Memories</h1>
             </div>
-            <button id="add-photo-btn" class="comic-btn primary" style="margin-left: auto;">[ADD PHOTO 📸]</button>
+            <button id="add-photo-btn" class="gallery-add-btn" title="Add Photo">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+            </button>
             <input type="file" id="photo-upload" class="hidden" accept="image/*">
-            <a href="index.html" class="comic-btn back-btn">[← BACK]</a>
         </div>
+
+        <!-- Sticky Filter Bar -->
+        <nav id="filter-container" class="gallery-filter-bar">
+            <button class="gallery-filter-btn active" data-year="all">
+                <span class="filter-label">All</span>
+            </button>
+            <!-- Dynamic years will be injected here -->
+        </nav>
     </header>
 
     <!-- Standard Gallery Container -->
@@ -55,8 +68,6 @@
         <div id="yearly-gallery-container">
             <!-- Sections for 2021, 2022, etc. will be injected here -->
         </div>
-    </main>
-
     </main>
 
     <!-- Lightbox Modal -->

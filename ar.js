@@ -60,7 +60,7 @@ function startAR() {
     document.body.style.overflow = 'hidden';
     if (scanningIndicator) {
         scanningIndicator.classList.remove('hidden');
-        scanningIndicator.textContent = '🎯 Point at the Photo...';
+        scanningIndicator.textContent = '🎯 Point at the Frame...';
     }
     if (viewfinder) viewfinder.classList.remove('hidden');
 
@@ -172,18 +172,35 @@ function setupTargetListeners() {
         t.targetEl.addEventListener('targetFound', () => {
             console.log('Target found:', t.targetEl.id, '→ index', t.dataIndex);
 
-            // Hide scanning UI
-            if (scanningIndicator) scanningIndicator.classList.add('hidden');
+            // 1. Trigger Birthday Blast on the live camera! 🎈✨
+            console.log('🎉 TRIGGERING BIRTHDAY BLAST!');
+            confetti({
+                particleCount: 150,
+                spread: 100,
+                origin: { y: 0.6 },
+                colors: ['#FFFC00', '#FF007F', '#00F0FF', '#ffffff', '#ff7b00'],
+                scalar: 1.2,
+                ticks: 200,
+                zIndex: 999999
+            });
+
+            // 2. Give user a moment to see the magic before switching
+            if (scanningIndicator) {
+                scanningIndicator.classList.add('hidden');
+            }
             if (viewfinder) viewfinder.classList.add('hidden');
 
-            // Stop AR camera and show video modal
-            stopAR();
+            // 3. Delay the video reveal for 1.5 seconds
+            setTimeout(() => {
+                // Stop AR camera and show video modal
+                stopAR();
 
-            // Store which image to show after video
-            const data = targetData[t.dataIndex];
-            revealVideo.setAttribute('data-image-src', data.imageSrc);
+                // Store which image to show after video
+                const data = targetData[t.dataIndex];
+                revealVideo.setAttribute('data-image-src', data.imageSrc);
 
-            showVideoModal(t.dataIndex);
+                showVideoModal(t.dataIndex);
+            }, 1500);
         });
 
         t.targetEl.addEventListener('targetLost', () => {
